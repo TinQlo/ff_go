@@ -42,31 +42,34 @@ def get_all_abs_path(source_dir):
 
 
 def main():
-    print('Starting compress.........')
-    done_file = 0
-    file_num = len(get_all_abs_path(input_dir))
-    print('detect ' + str(file_num) + ' files~\n')
-    if not os.path.exists(input_dir):
-        os.mkdir(input_dir)
-    for i in get_all_abs_path(input_dir):
-        command = '.\\libs\\ffmpeg.exe  -y -i "' + i + '"  ".\\OUTPUT_TEMP_COMPRESS.' + str(
-            i.rsplit(".", 1)[1]) + '" -loglevel error'
-        print(subprocess.Popen(command, shell=True, stdout=subprocess.PIPE).stdout.read())
-        logging.debug(command)
-        os.remove(str(i.rsplit(".", 1)[0]) + '.' + str(i.rsplit(".", 1)[1]))
-        shutil.move('.\\OUTPUT_TEMP_COMPRESS.' + str(i.rsplit(".", 1)[1]), i)
-        done_file += 1
-        try:
-            os.remove('.\\OUTPUT_TEMP_COMPRESS.' + str(i.rsplit(".", 1)[1]))
-        except FileNotFoundError:
-            pass
-        info_msg = i + ' compress done ( ' + str(done_file) + ' / total ' + str(file_num) + ' )'
-        print(info_msg)
+    if not os.path.exists('.\\libs\\ffmpeg.exe'):
+        print('ff_compress.py: \r\n!!!!!!Not detect ffmpeg.exe in .\libs, please download it from https://github.com/BtbN/FFmpeg-Builds\r\n')
+    else:
+        print('Starting compress.........')
+        done_file = 0
+        file_num = len(get_all_abs_path(input_dir))
+        print('detect ' + str(file_num) + ' files~\n')
+        if not os.path.exists(input_dir):
+            os.mkdir(input_dir)
+        for i in get_all_abs_path(input_dir):
+            command = '.\\libs\\ffmpeg.exe  -y -i "' + i + '"  ".\\OUTPUT_TEMP_COMPRESS.' + str(
+                i.rsplit(".", 1)[1]) + '" -loglevel error'
+            print(subprocess.Popen(command, shell=True, stdout=subprocess.PIPE).stdout.read())
+            logging.debug(command)
+            os.remove(str(i.rsplit(".", 1)[0]) + '.' + str(i.rsplit(".", 1)[1]))
+            shutil.move('.\\OUTPUT_TEMP_COMPRESS.' + str(i.rsplit(".", 1)[1]), i)
+            done_file += 1
+            try:
+                os.remove('.\\OUTPUT_TEMP_COMPRESS.' + str(i.rsplit(".", 1)[1]))
+            except FileNotFoundError:
+                pass
+            info_msg = i + ' compress done ( ' + str(done_file) + ' / total ' + str(file_num) + ' )'
+            print(info_msg)
 
-        logging.info(info_msg)
-    os.system("echo.")
-    logging.debug('file compress done')
-    os.system("echo all file compress DONE! please press any key to continue~ \n")
+            logging.info(info_msg)
+        os.system("echo.")
+        logging.debug('file compress done')
+        os.system("echo all file compress DONE! please press any key to continue~ \n")
     os.system("pause")
     os.system("echo.")
 
